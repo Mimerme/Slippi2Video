@@ -27,17 +27,20 @@ rl.question('Enter Slippi GameID: ', (answer) => {
 	fs.writeFile('slip.json', json, 'utf8', function(){});
 
 	/*Begin the recording process*/
-	obs.connect({ address: 'localhost:4444'}).then(() => {
+	obs.connect({ address: 'localhost:' + obs_port}).then(() => {
 		console.log("Connected to OBS. Starting the recording");
 		obs.send("StartRecording");
-		console.log("Dolphin started...");
-		child_process.spawnSync(dolphin_path, ['-i', 'slip.json', '-b', '-e', melee_path]);
+        
+        console.log("Startng Dolphin...");
+        var dolphin = child_process.spawn(dolphin_path, ['-i', 'slip.json', '-b', '-e', melee_path]);
+        
+        dolphin.on('exit', (code) => {
+            console.log("Dolphin Stopped. Stopping the recording");
+            obs.send("StopRecording")
+                .then(() => {
+                    obs.disconnect();
+                });
+        });
 	})
-	.then(() => {
-		console.log("Dolphin stopped...\nStopping the recording");
-		obs.send("StopRecording");
-		obs.disconnect();
-	});
-
   rl.close();
 });
