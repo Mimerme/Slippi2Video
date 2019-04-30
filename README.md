@@ -13,6 +13,8 @@ Script that automatically records Slippi replays
 
 NOTE: currently the script doesn't support passwords when connecting to OBS websocket
 
+NOTE2: Javascript treats `\` as a special character. When inputing your path either replace all the `\` with `/` or `\\`
+
 3) Go into the Slippi Desktop App -> Configure Settings -> Configure Dolphin
 
 4) Launch OBS -> Add Window Capture Source -> Add the Dolphin Window as a source
